@@ -148,21 +148,24 @@ function stopWebcam() {
     tracks.forEach(track => track.stop());
     video.srcObject = null;
 
-    // Capture the photo
-    capturedPhotoCanvas.width = canvasElement.width;
-    capturedPhotoCanvas.height = canvasElement.height;
-    const ctx = capturedPhotoCanvas.getContext('2d');
+    // Create a temporary canvas to capture the image
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvasElement.width;
+    tempCanvas.height = canvasElement.height;
+    const ctx = tempCanvas.getContext('2d');
     
     // Flip the image horizontally to match the video view
-    ctx.translate(capturedPhotoCanvas.width, 0);
+    ctx.translate(tempCanvas.width, 0);
     ctx.scale(-1, 1);
     
     // Draw the video frame
     ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
     
-    // Reset the transformation
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-
+    // Convert canvas to data URL and set as img src
+    const imageDataUrl = tempCanvas.toDataURL('image/png');
+    capturedPhotoCanvas.src = imageDataUrl;
+    capturedPhotoCanvas.style.width = `${videoWidth}px`; // Set consistent width
+    
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
     capturedPhotoCanvas.style.display = 'block';
@@ -176,9 +179,9 @@ proceedButton.addEventListener('click', () => {
         // If you want to actually send the image
         capturedPhotoCanvas.toBlob((blob) => {
             const formData = new FormData();
-            formData.append('photo', blob, 'face_registration.png');
             const url = window.location.href;
             const token = url.split('=')[1];
+            formData.append('photo', blob, `${url}.png`);
             formData.append('token', token);
             // Example fetch call (you'd replace with your actual backend endpoint)
             fetch('/image_capture', {
