@@ -119,7 +119,6 @@ async function predictWebcam() {
         if (currentState === STATES.MOUTH_OPEN) {
             const mouthOpenLeft = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownLeft')?.score || 0;
             const mouthOpenRight = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownRight')?.score || 0;
-            console.log(mouthOpenLeft)
             if (mouthOpenLeft > 0.6 && mouthOpenRight) {
                 currentState = STATES.EYE_BLINK;
                 currentAction.textContent = 'Now blink both eyes';
@@ -179,12 +178,10 @@ function stopWebcam() {
     tracks.forEach(track => track.stop());
     video.srcObject = null;
 
-    console.log('Video stream stopped');
-
     // Create a temporary canvas to capture the image
     const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvasElement.width;
-    tempCanvas.height = canvasElement.height;
+    tempCanvas.width = video.videoWidth;  // Use video dimensions
+    tempCanvas.height = video.videoHeight;
     const ctx = tempCanvas.getContext('2d');
     
     // Flip the image horizontally to match the video view
@@ -192,23 +189,22 @@ function stopWebcam() {
     ctx.scale(-1, 1);
     
     // Draw the video frame
-    ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-    console.log('Image drawn on canvas');
-
+    ctx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+    
     // Convert canvas to data URL and set as img src
     const imageDataUrl = tempCanvas.toDataURL('image/png');
-    console.log('Image data URL:', imageDataUrl);
+    console.log('Image data URL:', imageDataUrl);  // Debugging log
     
+    const capturedPhotoCanvas = document.getElementById('capturedPhotoCanvas');
     capturedPhotoCanvas.src = imageDataUrl;
-    capturedPhotoCanvas.style.width = `${videoWidth}px`; // Set consistent width
-    
+    capturedPhotoCanvas.style.width = `${tempCanvas.width}px`; // Set consistent width
+
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
     capturedPhotoCanvas.style.display = 'block';
     proceedButton.style.display = 'block';
-    
-    console.log('Image displayed on screen');
 }
+
 
 proceedButton.addEventListener('click', () => {
         // Here you would typically send the captured photo to the backend
