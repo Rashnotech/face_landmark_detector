@@ -114,11 +114,11 @@ async function predictWebcam() {
     // Check face blendshapes
     if (results && results.faceBlendshapes && results.faceBlendshapes.length > 0) {
         const blendshapes = results.faceBlendshapes[0];
+        console.log(blendshapes)
         
         // Check for mouth open
         if (currentState === STATES.MOUTH_OPEN) {
             const mouthOpenScore = blendshapes.categories.find(category => category.categoryName === 'mouthOpen')?.score || 0;
-            console.log(mouthOpenScore)
             if (mouthOpenScore > 0.6) {
                 currentState = STATES.EYE_BLINK;
                 currentAction.textContent = 'Now blink both eyes';
