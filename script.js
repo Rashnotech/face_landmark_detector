@@ -88,7 +88,7 @@ async function predictWebcam() {
     }
 
     // Clear previous drawings
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    //canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
     let startTimeMs = performance.now();
     if (lastVideoTime !== video.currentTime) {
@@ -114,12 +114,13 @@ async function predictWebcam() {
     // Check face blendshapes
     if (results && results.faceBlendshapes && results.faceBlendshapes.length > 0) {
         const blendshapes = results.faceBlendshapes[0];
-        console.log(blendshapes)
         
         // Check for mouth open
         if (currentState === STATES.MOUTH_OPEN) {
-            const mouthOpenScore = blendshapes.categories.find(category => category.categoryName === 'mouthOpen')?.score || 0;
-            if (mouthOpenScore > 0.6) {
+            const mouthOpenLeft = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownLeft')?.score || 0;
+            const mouthOpenRight = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownRight')?.score || 0;
+            console.log(mouthOpenLeft)
+            if (mouthOpenLeft > 0.6 && mouthOpenRight) {
                 currentState = STATES.EYE_BLINK;
                 currentAction.textContent = 'Now blink both eyes';
             }
@@ -127,8 +128,8 @@ async function predictWebcam() {
         
         // Check for eye blink
         if (currentState === STATES.EYE_BLINK) {
-            const leftEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'leftEyeClosed')?.score || 0;
-            const rightEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'rightEyeClosed')?.score || 0;
+            const leftEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'browOuterUpLeft')?.score || 0;
+            const rightEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'browOuterUpRight')?.score || 0;
             console.log(leftEyeBlinkScore, rightEyeBlinkScore)
             if (leftEyeBlinkScore > 0.6 && rightEyeBlinkScore > 0.6) {
                 currentState = STATES.COMPLETE;
