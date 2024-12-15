@@ -181,7 +181,7 @@ proceedButton.addEventListener('click', () => {
             const formData = new FormData();
             const url = window.location.href;
             const token = url.split('=')[1];
-            formData.append('photo', blob, `${url}.png`);
+            formData.append('photo', blob, `${token}.png`);
             formData.append('token', token);
             // Example fetch call (you'd replace with your actual backend endpoint)
             fetch('/image_capture', {
