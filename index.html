@@ -5,28 +5,50 @@
   <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>Uni Abuja</title>
+  <title>Face Registration</title>
   <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
   <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+  <link href="style.css" rel="stylesheet">
 </head>
-<body>
-  <section id="demos" class="invisible">
-    <div id="liveView" class="videoView">
-      <button id="webcamButton" class="mdc-button mdc-button--raised">
-        <span class="mdc-button__ripple"></span>
-        <span class="mdc-button__label align-center">Start Registration</span>
-      </button>
-      <div style="position: relative;">
-        <video id="webcam" style="position: abso" autoplay playsinline></video>
-        <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0px; top: 0px;"></canvas>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold mb-4 text-teal-700">Face Registration</h1>
+    
+    <div id="instructions" class="mb-4 text-gray-700">
+      <p>Please follow these instructions carefully:</p>
+      <ul class="list-disc list-inside text-left">
+        <li>Remove glasses, hats, or any external face accessories</li>
+        <li>Ensure good lighting and face the camera directly</li>
+      </ul>
+    </div>
+
+    <section id="demos" class="invisible">
+      <div id="liveView" class="videoView">
+        <button id="webcamButton" class="mdc-button mdc-button--raised bg-teal-600 text-white">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__label">Start Registration</span>
+        </button>
+
+        <div id="camera-container" class="relative mt-4" style="display:none;">
+          <video id="webcam" class="mx-auto" autoplay playsinline></video>
+          <canvas class="output_canvas absolute top-0 left-0 w-full h-full" id="output_canvas"></canvas>
+        </div>
+
+        <div id="action-instructions" class="mt-4 text-gray-700" style="display:none;">
+          <p id="current-action">Open your mouth</p>
+        </div>
+
+        <canvas id="captured-photo" class="mt-4 mx-auto" style="display:none;"></canvas>
+
+        <button id="proceed-button" class="mdc-button mdc-button--raised bg-teal-600 text-white mt-4" style="display:none;">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__label">Proceed</span>
+        </button>
       </div>
-    </div>
-    <div class="blend-shapes">
-      <ul class="blend-shapes-list" id="video-blend-shapes"></ul>
-    </div>
-  </section>
-<!-- partial -->
-  <script type="module" src="./script.js"></script>
+    </section>
+  </div>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
