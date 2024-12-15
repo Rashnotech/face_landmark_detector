@@ -139,7 +139,7 @@ async function predictWebcam() {
 
     window.requestAnimationFrame(predictWebcam);
 }
-/*
+
 function stopWebcam() {
     const stream = video.srcObject;
     const tracks = stream.getTracks();
@@ -165,40 +165,6 @@ function stopWebcam() {
     capturedPhotoCanvas.src = imageDataUrl;
     capturedPhotoCanvas.style.width = `${videoWidth}px`; // Set consistent width
     
-    cameraContainer.style.display = 'none';
-    actionInstructions.style.display = 'none';
-    capturedPhotoCanvas.style.display = 'block';
-    proceedButton.style.display = 'block';
-}
-*/
-function stopWebcam() {
-    const stream = video.srcObject;
-    const tracks = stream.getTracks();
-
-    tracks.forEach(track => track.stop());
-    video.srcObject = null;
-
-    // Create a temporary canvas to capture the image
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = video.videoWidth;  // Use video dimensions
-    tempCanvas.height = video.videoHeight;
-    const ctx = tempCanvas.getContext('2d');
-    
-    // Flip the image horizontally to match the video view
-    ctx.translate(tempCanvas.width, 0);
-    ctx.scale(-1, 1);
-    
-    // Draw the video frame
-    ctx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-    
-    // Convert canvas to data URL and set as img src
-    const imageDataUrl = tempCanvas.toDataURL('image/png');
-    console.log('Image data URL:', imageDataUrl);  // Debugging log
-    
-    const capturedPhotoCanvas = document.getElementById('capturedPhotoCanvas');
-    capturedPhotoCanvas.src = imageDataUrl;
-    capturedPhotoCanvas.style.width = `${tempCanvas.width}px`; // Set consistent width
-
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
     capturedPhotoCanvas.style.display = 'block';
