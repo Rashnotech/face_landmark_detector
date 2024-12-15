@@ -87,13 +87,32 @@ async function predictWebcam() {
         await faceLandmarker.setOptions({ runningMode: runningMode });
     }
 
+    // Clear previous drawings
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
     let startTimeMs = performance.now();
     if (lastVideoTime !== video.currentTime) {
         lastVideoTime = video.currentTime;
         results = faceLandmarker.detectForVideo(video, startTimeMs);
     }
 
-    if (results.faceLandmarks && results.faceBlendshapes) {
+    // Draw face landmarks
+    if (results && results.faceLandmarks && results.faceLandmarks.length > 0) {
+        for (const landmarks of results.faceLandmarks) {
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color: "#C0C0C070", lineWidth: 1 });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, { color: "#FF3030" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW, { color: "#FF3030" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE, { color: "#30FF30" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW, { color: "#30FF30" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color: "#E0E0E0" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LIPS, { color: "#E0E0E0" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_IRIS, { color: "#FF3030" });
+            drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS, { color: "#30FF30" });
+        }
+    }
+
+    // Check face blendshapes
+    if (results && results.faceBlendshapes && results.faceBlendshapes.length > 0) {
         const blendshapes = results.faceBlendshapes[0];
         
         // Check for mouth open
@@ -142,4 +161,19 @@ function stopWebcam() {
 proceedButton.addEventListener('click', () => {
     // Here you would typically send the captured photo to the backend
     alert('Photo captured! Proceeding to next step...');
+    
+    // If you want to actually send the image
+    capturedPhotoCanvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('photo', blob, 'face_registration.png');
+        
+        // Example fetch call (you'd replace with your actual backend endpoint)
+        // fetch('/upload-photo', {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        // .then(response => response.json())
+        // .then(data => console.log(data))
+        // .catch(error => console.error('Error:', error));
+    });
 });
