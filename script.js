@@ -147,30 +147,26 @@ function stopWebcam() {
     tracks.forEach(track => track.stop());
     video.srcObject = null;
 
-    // Create a temporary canvas to capture the image
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvasElement.width;
-    tempCanvas.height = canvasElement.height;
-    const ctx = tempCanvas.getContext('2d');
+    // Capture the photo
+    capturedPhotoCanvas.width = canvasElement.width;
+    capturedPhotoCanvas.height = canvasElement.height;
+    const ctx = capturedPhotoCanvas.getContext('2d');
     
     // Flip the image horizontally to match the video view
-    ctx.translate(tempCanvas.width, 0);
+    ctx.translate(capturedPhotoCanvas.width, 0);
     ctx.scale(-1, 1);
     
     // Draw the video frame
     ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
     
-    // Convert canvas to data URL and set as img src
-    const imageDataUrl = tempCanvas.toDataURL('image/png');
-    capturedPhotoImg.src = imageDataUrl;
-    capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
-    
+    // Reset the transformation
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
-    capturedPhotoImg.style.display = 'block';
+    capturedPhotoCanvas.style.display = 'block';
     proceedButton.style.display = 'block';
 }
-
 
 proceedButton.addEventListener('click', () => {
         // Here you would typically send the captured photo to the backend
