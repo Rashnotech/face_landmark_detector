@@ -151,7 +151,6 @@ async function predictWebcam() {
         if (currentState === STATES.EYE_BLINK) {
             const leftEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'browOuterUpLeft')?.score || 0;
             const rightEyeBlinkScore = blendshapes.categories.find(category => category.categoryName === 'browOuterUpRight')?.score || 0;
-            console.log(leftEyeBlinkScore, rightEyeBlinkScore)
             if (leftEyeBlinkScore > 0.6 && rightEyeBlinkScore > 0.6) {
                 currentState = STATES.COMPLETE;
                 stopWebcam();
@@ -162,6 +161,17 @@ async function predictWebcam() {
     window.requestAnimationFrame(predictWebcam);
 }
 
+
+
+  function clearPhoto() {
+    const context = canvas.getContext('2d');
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+  }
+/*
 function stopWebcam() {
     const stream = video.srcObject;
     const tracks = stream.getTracks();
@@ -182,7 +192,31 @@ function stopWebcam() {
     } catch (error) {
         console.error('Error capturing image:', error);
     }
+}*/
+function clearPhoto() {
+  const context = canvas.getContext("2d");
+  context.fillStyle = "#AAA";
+  context.fillRect(0, 0, canvasElement.width, canvasElement.height);
+
+  const data = canvas.toDataURL("image/png");
+  capturedPhotoImg.setAttribute("src", data);
 }
+function stopWebcam() {
+    const context = canvasElement.getContext('2d');
+    if (videoWidth && video.videoHeight) {
+      canvas.width = videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, videoWidth, video.videoHeight);
+
+      const data = canvas.toDataURL('image/png');
+      capturedPhotoImg.setAttribute('src', data);
+      capturedPhotoImg.style.display = 'block';
+      cameraContainer.style.display = 'none';
+      actionInstructions.style.display = 'none';
+    } else {
+      clearPhoto();
+    }
+  }
 /*
 function stopWebcam() {
     const stream = video.srcObject;
