@@ -108,7 +108,7 @@ async function predictWebcam() {
     }
 
     // Clear previous drawings
-    //canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
     let startTimeMs = performance.now();
     if (lastVideoTime !== video.currentTime) {
