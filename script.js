@@ -145,7 +145,7 @@ function stopWebcam() {
     const tracks = stream.getTracks();
 
     tracks.forEach(track => track.stop());
-    video.srcObject = null;
+    
 
     // Create a temporary canvas to capture the image
     const tempCanvas = document.createElement('canvas');
@@ -164,7 +164,7 @@ function stopWebcam() {
     const imageDataUrl = tempCanvas.toDataURL('image/png');
     capturedPhotoImg.src = imageDataUrl;
     capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
-    
+    video.srcObject = null;
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
     capturedPhotoImg.style.display = 'block';
