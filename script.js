@@ -199,11 +199,12 @@ function stopWebcam() {
       canvasElement.height = video.videoHeight;
       context.drawImage(video, 0, 0, videoWidth, video.videoHeight);
 
-      const data = canvas.toDataURL('image/png');
+      const data = canvasElement.toDataURL('image/png');
       capturedPhotoImg.setAttribute('src', data);
       capturedPhotoImg.style.display = 'block';
       cameraContainer.style.display = 'none';
       actionInstructions.style.display = 'none';
+      proceedButton.style.display = 'block';
     } else {
       clearPhoto();
     }
