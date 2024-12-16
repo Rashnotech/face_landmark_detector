@@ -167,42 +167,21 @@ function stopWebcam() {
     const tracks = stream.getTracks();
     tracks.forEach(track => track.stop());
 
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvasElement.width;
-    tempCanvas.height = canvasElement.height;
-    const ctx = tempCanvas.getContext('2d');
-
-    // Check if video is actually ready
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-        console.error('Video dimensions are zero');
-        return;
-    }
-
     try {
-        ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+        // Use the existing canvas instead of creating a new one
+        const imageDataUrl = canvasElement.toDataURL('image/png');
         
-        const imageDataUrl = tempCanvas.toDataURL('image/png');
-        console.log('Image Data URL Length:', imageDataUrl.length);
-        console.log('First 100 chars of image data:', imageDataUrl.substring(0, 100));
-
-        if (imageDataUrl.length < 1000) {
-            console.error('Suspicious image data URL - too short');
-        }
-
-        capturedPhotoImg.onload = () => {
-            console.log('Image loaded successfully');
-        };
-        
-        capturedPhotoImg.onerror = (error) => {
-            console.error('Error loading image:', error);
-        };
-
         capturedPhotoImg.src = imageDataUrl;
+        capturedPhotoImg.style.width = `${videoWidth}px`;
+        
+        video.srcObject = null;
+        cameraContainer.style.display = 'none';
+        actionInstructions.style.display = 'none';
+        capturedPhotoImg.style.display = 'block';
+        proceedButton.style.display = 'block';
     } catch (error) {
         console.error('Error capturing image:', error);
     }
-
-    // Rest of the existing code...
 }
 /*
 function stopWebcam() {
