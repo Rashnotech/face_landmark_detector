@@ -63,10 +63,30 @@ function enableCam(event) {
     actionInstructions.style.display = 'block';
 
     const constraints = { video: true };
+    const constraints = { video: true };
+    navigator.mediaDevices.getUser Media(constraints).then((stream) => {
+        video.srcObject = stream;
+        video.addEventListener("loadeddata", () => {
+            console.log("Video data loaded");
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                predictWebcam(); // Start predicting when video data is loaded
+            } else {
+                console.error("Video dimensions are invalid");
+            }
+        });
+    }).catch((error) => {
+        console.error("Error accessing webcam:", error);
+    });
+    /*
     navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         video.srcObject = stream;
-        video.addEventListener("loadeddata", predictWebcam);
-    });
+        //video.addEventListener("loadeddata", predictWebcam);
+        video.addEventListener("loadeddata", () => {
+            console.log("Video data loaded");
+            predictWebcam(); // Start predicting when video data is loaded
+        });
+        video.srcObject = stream;
+    });*/
 }
 
 let lastVideoTime = -1;
