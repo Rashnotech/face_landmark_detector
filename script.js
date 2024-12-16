@@ -145,23 +145,24 @@ function stopWebcam() {
     const tracks = stream.getTracks();
 
     tracks.forEach(track => track.stop());
-    video.srcObject = null;
+    //video.srcObject = null;
 
     // Capture the photo
-    capturedPhotoCanvas.width = canvasElement.width;
-    capturedPhotoCanvas.height = canvasElement.height;
-    const ctx = capturedPhotoCanvas.getContext('2d');
+    canvasElement.width = video.width;
+    canvasElement.height = video.height;
+    const ctx = canvasElement.getContext('2d');
     
     // Flip the image horizontally to match the video view
-    ctx.translate(capturedPhotoCanvas.width, 0);
+    ctx.translate(canvasElement.width, 0);
     ctx.scale(-1, 1);
     
     // Draw the video frame
-    ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+    ctx.drawImage(video, 0, 0);
     
     // Reset the transformation
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-
+    //ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const photoDataUrl = canvasElement.toDataURL("image/jpeg");
+    capturedPhotoCanvas.src = photoDataUrl;
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
     capturedPhotoCanvas.style.display = 'block';
