@@ -250,7 +250,7 @@ proceedButton.addEventListener('click', () => {
         alert('Photo captured! Proceeding to next step...');
         
         // If you want to actually send the image
-        capturedPhotoCanvas.toBlob((blob) => {
+        capturedPhotoImg.toBlob((blob) => {
             const formData = new FormData();
             const url = window.location.href;
             const token = url.split('=')[1];
