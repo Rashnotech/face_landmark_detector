@@ -205,6 +205,9 @@ function stopWebcam() {
       cameraContainer.style.display = 'none';
       actionInstructions.style.display = 'none';
       proceedButton.style.display = 'block';
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
       video.srcObject = null;
     } else {
       clearPhoto();
