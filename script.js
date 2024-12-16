@@ -139,7 +139,7 @@ async function predictWebcam() {
         if (currentState === STATES.MOUTH_OPEN) {
             const mouthOpenLeft = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownLeft')?.score || 0;
             const mouthOpenRight = blendshapes.categories.find(category => category.categoryName === 'mouthLowerDownRight')?.score || 0;
-            if (mouthOpenLeft > 0.6 && mouthOpenRight) {
+            if (mouthOpenLeft > 0.6 && mouthOpenRight > 0.6) {
                 currentState = STATES.EYE_BLINK;
                 currentAction.textContent = 'Now blink both eyes';
             }
