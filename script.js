@@ -143,6 +143,36 @@ async function predictWebcam() {
 function stopWebcam() {
     const stream = video.srcObject;
     const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
+
+    // Create a temporary canvas to capture the image
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvasElement.width;
+    tempCanvas.height = canvasElement.height;
+    const ctx = tempCanvas.getContext('2d');
+
+    // Flip the image horizontally to match the video view
+    ctx.translate(tempCanvas.width, 0);
+    ctx.scale(-1, 1);
+
+    // Draw the video frame
+    ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+    // Convert canvas to data URL and set as img src
+    const imageDataUrl = tempCanvas.toDataURL('image/png');
+    console.log(imageDataUrl); // Log the image data URL for debugging
+    capturedPhotoImg.src = imageDataUrl;
+    capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
+    video.srcObject = null;
+    cameraContainer.style.display = 'none';
+    actionInstructions.style.display = 'none';
+    capturedPhotoImg.style.display = 'block';
+    proceedButton.style.display = 'block';
+}
+/*
+function stopWebcam() {
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
 
     tracks.forEach(track => track.stop());
     
@@ -169,7 +199,7 @@ function stopWebcam() {
     actionInstructions.style.display = 'none';
     capturedPhotoImg.style.display = 'block';
     proceedButton.style.display = 'block';
-}
+}*/
 
 proceedButton.addEventListener('click', () => {
         // Here you would typically send the captured photo to the backend
