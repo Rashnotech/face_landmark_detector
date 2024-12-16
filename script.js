@@ -171,16 +171,13 @@ function stopWebcam() {
     tempCanvas.height = canvasElement.height;
     const ctx = tempCanvas.getContext('2d');
 
-    // Flip the image horizontally to match the video view
-    ctx.translate(tempCanvas.width, 0);
-    ctx.scale(-1, 1);
-
-    // Draw the video frame
+    // Draw the video frame without flipping
     ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
     // Convert canvas to data URL and set as img src
     const imageDataUrl = tempCanvas.toDataURL('image/png');
     console.log(imageDataUrl); // Log the image data URL for debugging
+    
     capturedPhotoImg.src = imageDataUrl;
     capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
     video.srcObject = null;
