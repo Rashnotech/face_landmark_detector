@@ -195,8 +195,8 @@ function clearPhoto() {
 function stopWebcam() {
     const context = canvasElement.getContext('2d');
     if (videoWidth && video.videoHeight) {
-      canvas.width = videoWidth;
-      canvas.height = video.videoHeight;
+      canvasElement.width = videoWidth;
+      canvasElement.height = video.videoHeight;
       context.drawImage(video, 0, 0, videoWidth, video.videoHeight);
 
       const data = canvas.toDataURL('image/png');
