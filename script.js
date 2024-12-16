@@ -64,7 +64,7 @@ function enableCam(event) {
 
     const constraints = { video: true };
     //const constraints = { video: true };
-    navigator.mediaDevices.getUser Media(constraints).then((stream) => {
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         video.srcObject = stream;
         video.addEventListener("loadeddata", () => {
             console.log("Video data loaded");
