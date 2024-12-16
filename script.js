@@ -6,7 +6,7 @@ const webcamButton = document.getElementById("webcamButton");
 const cameraContainer = document.getElementById("camera-container");
 const actionInstructions = document.getElementById("action-instructions");
 const currentAction = document.getElementById("current-action");
-const capturedPhotoCanvas = document.getElementById("captured-photo");
+const capturedPhotoImg = document.getElementById("captured-photo");
 const proceedButton = document.getElementById("proceed-button");
 
 const video = document.getElementById("webcam");
@@ -145,27 +145,29 @@ function stopWebcam() {
     const tracks = stream.getTracks();
 
     tracks.forEach(track => track.stop());
-    //video.srcObject = null;
+    video.srcObject = null;
 
-    // Capture the photo
-    canvasElement.width = video.width;
-    canvasElement.height = video.height;
-    const ctx = canvasElement.getContext('2d');
+    // Create a temporary canvas to capture the image
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvasElement.width;
+    tempCanvas.height = canvasElement.height;
+    const ctx = tempCanvas.getContext('2d');
     
     // Flip the image horizontally to match the video view
-    ctx.translate(canvasElement.width, 0);
+    ctx.translate(tempCanvas.width, 0);
     ctx.scale(-1, 1);
     
     // Draw the video frame
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
     
-    // Reset the transformation
-    //ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const photoDataUrl = canvasElement.toDataURL("image/jpeg");
-    capturedPhotoCanvas.src = photoDataUrl;
+    // Convert canvas to data URL and set as img src
+    const imageDataUrl = tempCanvas.toDataURL('image/png');
+    capturedPhotoImg.src = imageDataUrl;
+    capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
+    
     cameraContainer.style.display = 'none';
     actionInstructions.style.display = 'none';
-    capturedPhotoCanvas.style.display = 'block';
+    capturedPhotoImg.style.display = 'block';
     proceedButton.style.display = 'block';
 }
 
