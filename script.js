@@ -205,6 +205,7 @@ function stopWebcam() {
       cameraContainer.style.display = 'none';
       actionInstructions.style.display = 'none';
       proceedButton.style.display = 'block';
+      video.srcObject = null;
     } else {
       clearPhoto();
     }
