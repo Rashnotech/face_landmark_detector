@@ -108,7 +108,7 @@ async function predictWebcam() {
     }
 
     // Clear previous drawings
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    //canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
     let startTimeMs = performance.now();
     if (lastVideoTime !== video.currentTime) {
@@ -130,6 +130,8 @@ async function predictWebcam() {
             drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS, { color: "#30FF30" });
         }
     }
+
+    
 
     // Check face blendshapes
     if (results && results.faceBlendshapes && results.faceBlendshapes.length > 0) {
@@ -165,26 +167,42 @@ function stopWebcam() {
     const tracks = stream.getTracks();
     tracks.forEach(track => track.stop());
 
-    // Create a temporary canvas to capture the image
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = canvasElement.width;
     tempCanvas.height = canvasElement.height;
     const ctx = tempCanvas.getContext('2d');
 
-    // Draw the video frame without flipping
-    ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+    // Check if video is actually ready
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        console.error('Video dimensions are zero');
+        return;
+    }
 
-    // Convert canvas to data URL and set as img src
-    const imageDataUrl = tempCanvas.toDataURL('image/png');
-    console.log(imageDataUrl); // Log the image data URL for debugging
-    
-    capturedPhotoImg.src = imageDataUrl;
-    capturedPhotoImg.style.width = `${videoWidth}px`; // Set consistent width
-    video.srcObject = null;
-    cameraContainer.style.display = 'none';
-    actionInstructions.style.display = 'none';
-    capturedPhotoImg.style.display = 'block';
-    proceedButton.style.display = 'block';
+    try {
+        ctx.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+        
+        const imageDataUrl = tempCanvas.toDataURL('image/png');
+        console.log('Image Data URL Length:', imageDataUrl.length);
+        console.log('First 100 chars of image data:', imageDataUrl.substring(0, 100));
+
+        if (imageDataUrl.length < 1000) {
+            console.error('Suspicious image data URL - too short');
+        }
+
+        capturedPhotoImg.onload = () => {
+            console.log('Image loaded successfully');
+        };
+        
+        capturedPhotoImg.onerror = (error) => {
+            console.error('Error loading image:', error);
+        };
+
+        capturedPhotoImg.src = imageDataUrl;
+    } catch (error) {
+        console.error('Error capturing image:', error);
+    }
+
+    // Rest of the existing code...
 }
 /*
 function stopWebcam() {
